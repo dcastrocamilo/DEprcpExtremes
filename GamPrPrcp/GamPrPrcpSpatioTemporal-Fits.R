@@ -1,6 +1,6 @@
-##########################################################
-## Code to fit GAM fits to probability of precipitation ##
-##########################################################
+######################################################
+## Code to fit GAMs to probability of precipitation ##
+######################################################
 # (i) fit your model and extract the deviance residuals
 # (ii) for each smooth term in your model, fit an equivalent, single, smooth to the residuals, 
 # using a substantially increased k to see if there is pattern in the residuals that could potentially be explained by increasing k.
