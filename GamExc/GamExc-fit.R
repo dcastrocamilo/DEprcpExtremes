@@ -1,6 +1,6 @@
-#############################
-## Code to fit exceedances ##
-#############################
+#####################################
+## Code to fit GAMS to exceedances ##
+#####################################
 library(mgcv)
 library(evgam)
 load('german-precipitation.rdata')
