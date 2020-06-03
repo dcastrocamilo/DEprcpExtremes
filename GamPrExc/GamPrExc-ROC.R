@@ -1,13 +1,13 @@
-######################################
-## ROC for exceedance probabilities ##
-######################################
+##############################################################################################################################
+## ROC for exceedance probabilities: random sample doesn't really make sense since we have a cyclic smooth effect on months ##
+##############################################################################################################################
 # Reference: https://daviddalpiaz.github.io/r4sl/logistic-regression.html
 
 library(mgcv)
 load('german-precipitation.rdata')
 load('sites_DE_sel_elev.Rdata') # 4527 sites (columns), 14030 time points (rows)
 load('SpatialSample.Rdata')
-load('GamData_ber.Rdata')
+load('GamPrExc/GamData_ber.Rdata')
 
 dat = data.frame("obs"=as.vector(data_ber),
                  "site"=rep(1:ncol(data_ber), each= nrow(data_ber)),
@@ -20,9 +20,9 @@ dat = data.frame("obs"=as.vector(data_ber),
 site2keep = spatial.sample$id
 dat = dat[which(dat$site %in% site2keep), ]
 
-# Divide data, 90% training, 10% testing
+# Divide data, 50% training, 50% testing
 set.seed(42)
-dat_idx = sample(nrow(dat), nrow(dat)*0.9)
+dat_idx = sample(1:nrow(dat), nrow(dat)*0.5)
 dat_trn = dat[dat_idx, ]
 dat_tst = dat[-dat_idx, ]
 
@@ -32,7 +32,11 @@ b = gam(obs ~ s(elev) + te(lon,lat) + s(month, bs="cc", k=12) + s(year),
         family = binomial, 
         data = dat_trn, 
         select = TRUE)
-Sys.time() - t0 # 
+Sys.time() - t0 # 36 mins
+save(b, file = 'GamPrExcSpatioTemporal112stations_elev9_te24_year9_TrainingData50ROC.Rdata')
+
+load('GamPrExc/GamPrExcSpatioTemporal112stations_elev9_te24_year9_TrainingData90ROC.Rdata')
+load('GamPrExc/GamPrExcSpatioTemporal112stations_elev9_te24_year9_TrainingData50ROC.Rdata')
 
 # We write a function which allows use to make predictions based on different probability cutoffs.
 get_logistic_pred = function(mod, data, res = "y", pos = 1, neg = 0, cut = 0.5) {
@@ -41,14 +45,15 @@ get_logistic_pred = function(mod, data, res = "y", pos = 1, neg = 0, cut = 0.5) 
 }
 
 # Let’s use this to obtain predictions using a low, medium, and high cutoff. (0.1, 0.5, and 0.9)
-test_pred_10 = get_logistic_pred(b, data = dat_tst, res = "default", 
+test_pred_10 = get_logistic_pred(b, data = dat_tst, res = "obs", 
                                  pos = "Yes", neg = "No", cut = 0.1)
-test_pred_50 = get_logistic_pred(b, data = dat_tst, res = "default", 
+test_pred_50 = get_logistic_pred(b, data = dat_tst, res = "obs", 
                                  pos = "Yes", neg = "No", cut = 0.5)
-test_pred_90 = get_logistic_pred(b, data = dat_tst, res = "default", 
+test_pred_90 = get_logistic_pred(b, data = dat_tst, res = "obs", 
                                  pos = "Yes", neg = "No", cut = 0.9)
 
 # We evaluate accuracy, sensitivity, and specificity for these classifiers.
+library(caret)
 
 test_tab_10 = table(predicted = test_pred_10, actual = dat_tst$obs)
 test_tab_50 = table(predicted = test_pred_50, actual = dat_tst$obs)
