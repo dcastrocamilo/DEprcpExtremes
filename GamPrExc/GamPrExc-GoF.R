@@ -1,7 +1,6 @@
 ##################################################
 ## Goodness of fit for exceedance probabilities ##
 ##################################################
-# Note: see ROC in GamPrExc-ROC.R
 library(mgcv)
 library(tidymv)
 library("viridis")
