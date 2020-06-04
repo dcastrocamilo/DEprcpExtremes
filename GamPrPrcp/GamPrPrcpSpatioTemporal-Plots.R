@@ -55,7 +55,7 @@ for(mm in 1:12){
 pdf(paste0(name, '-YearEffect.pdf'), width = 7, height = 5)
 par(mar=c(3,3.2,1.5,0.5),mgp=c(1.6,0.5,0),font.main=1.3,cex=1.3,cex.main=1)
 col2use <- plasma(12)
-plot(year2pred, yeffect[,1], type="l", ylab="Fitted probability", xlab="Time", col=col2use[1], ylim=c(.450,0.7))
+plot(year2pred, yeffect[,1], type="l", ylab="Fitted probability", xlab="Time", col=col2use[1], ylim=c(.4,.7))
 text(x=year2pred[1],y=yeffect[1,1], labels = month.abb[1], cex=0.6, col = col2use[1])
 for(mm in 2:12){
   lines(year2pred, yeffect[,mm], col=col2use[mm])
@@ -67,7 +67,7 @@ dev.off()
 pdf(paste0(name, '-YearEffectSeassons.pdf'), width = 7, height = 5)
 par(mar=c(3,3.2,1.5,0.5),mgp=c(1.6,0.5,0),font.main=1.3,cex=1.3,cex.main=1)
 col2use <- plasma(12)
-plot(year2pred, yeffect[,1], type="l", ylab="Fitted probability", xlab="Time", col=col2use[1], ylim=c(0,1), lwd = 1.2)
+plot(year2pred, yeffect[,1], type="l", ylab="Fitted probability", xlab="Time", col=col2use[1], ylim=c(.4,.7), lwd = 1.2)
 for(mm in 2:12){
   col = col2use[9] # summer
   if(mm<5 || mm>9) col = col2use[1]
@@ -89,7 +89,7 @@ for(mm in unique(dat$year)){
 
 pdf(paste0(name, '-MonthEffect.pdf'), width = 7, height = 5)
 col2use <- plasma(39)
-plot(month2pred, yeffect[,1], type="l", ylab="Fitted probability", xlab='', col=col2use[1], ylim=c(0,1), axes = F)
+plot(month2pred, yeffect[,1], type="l", ylab="Fitted probability", xlab='', col=col2use[1], ylim=c(.35,.65), axes = F)
 axis(1, at = 1:12, labels = month.abb); axis(2); box()
 text(x=month2pred[1],y=yeffect[1,1], labels = as.character(1981), cex=0.6, col = col2use[1], lwd = 2)
 sel.year1 = c(1990,2000,2010,2019)
