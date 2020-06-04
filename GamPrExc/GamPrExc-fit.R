@@ -31,3 +31,18 @@ Sys.time() - t0 # 18 mins
 gam.check(b) 
 save(b, file = 'GamPrExcQ75SpatioTemporal112stations_elev9_te24_year9.Rdata')
 
+# Method: UBRE   Optimizer: outer newton
+# full convergence after 10 iterations.
+# Gradient range [-1.419232e-08,5.560796e-08]
+# (score -0.2802886 & scale 1).
+# eigenvalue range [-1.376961e-08,2.556729e-07].
+# Model rank =  53 / 53
+# ss
+# Basis dimension (k) checking results. Low p-value (k-index<1) may
+# indicate that k is too low, especially if edf is close to k'.
+# 
+#                k'   edf k-index p-value
+# s(elev)      9.00  8.93    0.96    0.85
+# te(lon,lat) 24.00 23.64    0.94    0.21
+# s(month)    10.00  9.98    0.96    0.90
+# s(year)      9.00  7.93    0.97    0.94
