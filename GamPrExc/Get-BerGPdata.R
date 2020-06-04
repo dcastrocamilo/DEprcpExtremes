@@ -8,7 +8,7 @@ load('GamPrExc/fitted_quant_75.rdata')
 
 tmp = (data_sel > fitted.quant.mat)
 data_ber = 1*tmp
-save(data_ber, file = 'GamPrExc/GamData_isExcQ75.Rdata')
+save(data_ber, file = 'GamPrExc/GamData_isExcQ75_14030x4527.Rdata')
 
 # dates_quant = data.frame(quantile.mat$dates); names(dates_quant) = c('year', 'month')
 # quant = data.frame(quantile.mat$quant)
