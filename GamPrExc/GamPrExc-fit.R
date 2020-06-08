@@ -2,21 +2,23 @@
 ## Code to fit GAMs to exceedance probabilities ##
 ##################################################
 library(mgcv)
+library(parallel)
 load('german-precipitation.rdata')
 load('sites_DE_sel_elev.Rdata') # 4527 sites (columns), 14030 time points (rows)
 load('SpatialSample.Rdata')
 # load('GamPrExc/GamData_isExcQ75.Rdata')
 load('GamData_isExcQ75.Rdata')
+load('GamData_isExcQ75_14030x4527.Rdata')
 
 # load('GamPrExc/GamData_isExcQ75_14030x4527.Rdata')
-# 
-# dat = data.frame("obs"=as.vector(data_ber),
-#                  "site"=rep(1:ncol(data_ber), each= nrow(data_ber)),
-#                  "lat"=rep(sites_DE_sel$lat, each= nrow(data_ber)),
-#                  "lon"=rep(sites_DE_sel$lon, each= nrow(data_ber)),
-#                  "elev"=rep(sites_DE_sel$elevation, each= nrow(data_ber)),
-#                  "month"=rep(dates_sel$month, ncol(data_ber)),
-#                  "year"=rep(dates_sel$year, ncol(data_ber)))
+
+dat = data.frame("obs"=as.vector(data_ber),
+                 "site"=rep(1:ncol(data_ber), each= nrow(data_ber)),
+                 "lat"=rep(sites_DE_sel$lat, each= nrow(data_ber)),
+                 "lon"=rep(sites_DE_sel$lon, each= nrow(data_ber)),
+                 "elev"=rep(sites_DE_sel$elevation, each= nrow(data_ber)),
+                 "month"=rep(dates_sel$month, ncol(data_ber)),
+                 "year"=rep(dates_sel$year, ncol(data_ber)))
 # 
 # site2keep = spatial.sample$id
 # dat = dat[which(dat$site %in% site2keep), ]
@@ -46,3 +48,13 @@ save(b, file = 'GamPrExcQ75SpatioTemporal112stations_elev9_te24_year9.Rdata')
 # te(lon,lat) 24.00 23.64    0.94    0.21
 # s(month)    10.00  9.98    0.96    0.90
 # s(year)      9.00  7.93    0.97    0.94
+
+cl <- makeCluster(detectCores()-2)
+t0 = Sys.time()
+m_binomial <- bam(obs~s(year)+s(month, bs="cc", k=12)+s(elev)+te(lat,lon),
+                  family="binomial", 
+                  data=dat, 
+                  select=TRUE,
+                  cluster=cl)
+Sys.time() - t0 #
+stopCluster(cl)
