@@ -24,6 +24,7 @@ sh.ga = exp(f1(x1)/2-2)
 y = rgamma(n, shape = 1/sh.ga, scale = mu.ga*sh.ga)
 
 b1 = gam(list(y ~ s(x0) + s(x2), ~s(x1) + s(x3)),
+         data = data.frame(y = y, x0 = x0, x1 = x1, x2 = x2, x3 = x3),
          family = gammals)
 plot(b1, pages = 1)
 # summary(b1); gam.check(b1)
